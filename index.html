@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="lib/paper.js"></script>
+<script type="text/javascript" src="sketch.min.js"></script>
+<style>
+canvas {
+	position: relative;
+	border: 1px solid black;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/* Scale canvas with resize attribute to full size */
+canvas[resize] {
+	width: 100%;
+	height: 100%;
+}
+
+#title {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	top: 20%;
+	text-align: center;
+	font-size: 30pt;
+	color: white;
+	font-family: monospace;
+	transform: scale(0.8, 1.8);
+}
+
+#blinds-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+}
+
+#the-rest-of-the-website {
+	background-color: teal;
+	color: pink;
+	font-size: 30pt;
+}
+</style>
+</head>
+<body>
+	<section id="blinds-container">
+		<div id="title">
+			<h1>ken's birds</h1>
+			<h1>2000 pumpkins</h1>
+		</div>
+		<canvas id="myCanvas" resize></canvas>
+	</section>
+	<section>
+		<div id="the-rest-of-the-website">
+			<p>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et felis ac turpis bibendum pellentesque. Pellentesque porta urna a urna pharetra gravida. Aliquam non mauris pretium ligula egestas scelerisque. Donec vitae augue et orci ultricies congue. Vivamus tincidunt, neque ac consectetur semper, nisi mi rhoncus ante, vel molestie mi mi ac massa. Etiam sit amet magna in velit ultricies interdum ut vel odio. Aenean interdum nec sapien a commodo. Pellentesque diam leo, suscipit quis semper sed, iaculis ut libero. Cras lobortis massa a aliquet auctor. Integer porttitor nulla eget sapien lobortis mollis. Integer finibus nisl non ipsum mollis tempor.
+			</p>
+
+			<p>
+			here i go scrolling again !
+			</p>
+
+			<p>
+Donec interdum sed mauris nec bibendum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In hac habitasse platea dictumst. Nam ex neque, finibus ut ipsum at, bibendum euismod erat. Donec vel ex fermentum, porttitor magna ut, malesuada mi. Nullam lobortis volutpat magna, nec tristique erat scelerisque in. Donec id quam consequat, vehicula eros ac, porta risus. In porta nulla et ex ornare, non mollis nibh iaculis. Integer luctus ipsum sed quam aliquam luctus. Donec eu hendrerit eros, id commodo odio. Etiam pellentesque nibh vel tristique consequat. Donec nec dignissim ex.
+			</p>
+		</div>
+	</section>
+</body>
+</html>
