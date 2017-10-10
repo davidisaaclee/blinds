@@ -45,6 +45,8 @@ function setup(paper) {
 	const blindsSymbolDefn = 
 		new paper.SymbolDefinition(makeBlindsPrototype(paper.view.bounds.width, k.blindsHeight), true);
 
+	blindsSymbolDefn.item.visible = false;
+
 	// Place instances of the blinds' symbol definition.
 	let blindsInstances = [];
 	for (var blindIndex = 0; blindIndex < numberOfBlinds(); blindIndex++) {
