@@ -4,6 +4,16 @@ const k = {
 
 	// How tall is a single "blind"? (in px)
 	blindsHeight: 50,
+
+	// How quickly do the blinds open/close in response to mouse movement?
+	// (larger number = faster)
+	blindsSensitivity: 10,
+
+	// How many blinds cycles (open to close to open) can the user scroll through by moving mouse up?
+	maximumBlindsCyclesUp: 2,
+
+	// How many blinds cycles (open to close to open) can the user scroll through by moving mouse down?
+	maximumBlindsCyclesDown: 2,
 };
 
 // Only executed our code once the DOM is ready.
@@ -76,16 +86,33 @@ function makeBlindsTool(blindsSymbolDefinition) {
 	tool.lastScaleFactor = 1;
 
 	tool.onMouseMove = (event) => {
-		console.log("mouse moving");
-		const delta = 5 * -event.delta.y / paper.view.bounds.height;
+		// Increment `blindsProgress` with the change in mouse position.
+		const delta = k.blindsSensitivity * -event.delta.y / paper.view.bounds.height;
 
-		// Clamp the blinds progress to (almost) 0-1.
-		// (Padding a bit on both sides: 0.001 because scaling to 0 is irreversible,
-		// and 1.01 to fill in any subpixel gaps between the fully closed blinds.)
-		blindsProgress = clamp(blindsProgress + delta, { min: 0.001, max: 1.01 });
+		// (multiplying those max cycles numbers by 2, since a cycle spans 2 units of `blindsProgress`)
+		blindsProgress = 
+			clamp(blindsProgress + delta, 
+						{ min: -k.maximumBlindsCyclesDown * 2, 
+							max: k.maximumBlindsCyclesUp * 2 });
 
 		// Scale the definition item based on the new scale factor.
-		const newScaleFactor = blindsProgress;
+		const newScaleFactor = (() => {
+			// safety first!
+			// clamp to (0, 1), then offset by a lil bit to prevent against both 
+			// scaling to nothing and subpixel lines between blinds
+			const clampToValidRange = (x) => clamp(x, { min: 0, max: 1 }) + 0.001;
+
+			// some math to figure out the stage / progress of the blinds at the
+			// current `blindsProgress`.
+			const a = wrap(blindsProgress, 2.0);
+			if (a > 1) {
+				// blinds closing as mouse goes up
+				return clampToValidRange(2 - a);
+			} else {
+				// blinds opening as mouse goes up
+				return clampToValidRange(a);
+			}
+		})();
 		blindsSymbolDefinition.item.scale(1, newScaleFactor / tool.lastScaleFactor);
 
 		// Simulate scaling to nothing by hiding the blind item at the minimum scale level.
@@ -122,6 +149,13 @@ function insertItemIntoIndexedMap(indexedMap, item) {
 
 function clamp(n, { min, max }) {
 	return Math.max(min, Math.min(max, n));
+}
+
+// like modulo, but negatives work more like how you'd expect
+// wrap(-2, 10) => 8
+function wrap(n, width) {
+	const t = n % width;
+	return (t < 0) ? (width + t) : t;
 }
 
 function positionOfBlindInstance(blindIndex, viewHeight, numberOfBlinds) {
