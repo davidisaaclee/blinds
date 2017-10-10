@@ -97,6 +97,8 @@ function makeBlindsTool(blindsSymbolDefinition) {
 
 		// Scale the definition item based on the new scale factor.
 		const newScaleFactor = (() => {
+			const deadZone = 0.2;
+
 			// safety first!
 			// clamp to (0, 1), then offset by a lil bit to prevent against both 
 			// scaling to nothing and subpixel lines between blinds
@@ -105,12 +107,16 @@ function makeBlindsTool(blindsSymbolDefinition) {
 			// some math to figure out the stage / progress of the blinds at the
 			// current `blindsProgress`.
 			const a = wrap(blindsProgress, 2.0);
-			if (a > 1) {
+
+			if (a >= 2 - deadZone || a <= deadZone) {
+				// dead zone, keep blinds open
+				return 0.001;
+			} else if (a > 1) {
 				// blinds closing as mouse goes up
-				return clampToValidRange(2 - a);
+				return clampToValidRange(map(2 - a, { from: { min: deadZone, max: 1 }, to: { min: 0, max: 1 } }));
 			} else {
 				// blinds opening as mouse goes up
-				return clampToValidRange(a);
+				return clampToValidRange(map(a, { from: { min: deadZone, max: 1 }, to: { min: 0, max: 1 } }));
 			}
 		})();
 		blindsSymbolDefinition.item.scale(1, newScaleFactor / tool.lastScaleFactor);
@@ -156,6 +162,10 @@ function clamp(n, { min, max }) {
 function wrap(n, width) {
 	const t = n % width;
 	return (t < 0) ? (width + t) : t;
+}
+
+function map(n, { from, to }) {
+	return (n - from.min) / (from.max - from.min) * (to.max - to.min) + to.min;
 }
 
 function positionOfBlindInstance(blindIndex, viewHeight, numberOfBlinds) {
