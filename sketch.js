@@ -1,13 +1,20 @@
+const k = {
+	// How long should the script wait until enabling blinds interaction? (in ms)
+	interactionDelay: 1000,
+
+	// How tall is a single "blind"? (in px)
+	blindsHeight: 50,
+};
+
 // Only executed our code once the DOM is ready.
 window.onload = function() {
 	setup(paper);
 }
 
-const blindsHeight = 50;
 
 // The number of blinds is calculated from the viewport height.
 // Calling this will use the current viewport height.
-const numberOfBlinds = () => paper.view.bounds.height / blindsHeight;
+const numberOfBlinds = () => paper.view.bounds.height / k.blindsHeight;
 
 function setup(paper) {
 	// Get a reference to the canvas object
@@ -26,7 +33,7 @@ function setup(paper) {
 	// A symbol definition lets us manipulate one item, and have the changes to that one item
 	// update many instances, similar to a Sketch symbol.
 	const blindsSymbolDefn = 
-		new paper.SymbolDefinition(makeBlindsPrototype(paper.view.bounds.width, blindsHeight), true);
+		new paper.SymbolDefinition(makeBlindsPrototype(paper.view.bounds.width, k.blindsHeight), true);
 
 	// Place instances of the blinds' symbol definition.
 	let blindsInstances = [];
@@ -39,12 +46,10 @@ function setup(paper) {
 		blindsInstances.push(instance);
 	}
 
-	// Create, activate, and register tool to manage blinds interaction.
-	const blindsTool = makeBlindsTool(blindsSymbolDefn);
-	blindsTool.activate();
-	paper.tools.push(blindsTool);
+	// Create tool to interact with blinds after waiting `k.interactionDelay` ms.
+	window.setTimeout(() => makeBlindsTool(blindsSymbolDefn), k.interactionDelay);
 
-	// Add handler to resize items whenever window is resized.
+	// Add handler to layout items whenever window is resized.
 	paper.view.onResize = (event) => {
 		blindsSymbolDefn.item.bounds.width = event.size.width;
 		if (blindsInstances.length < numberOfBlinds()) {
@@ -71,6 +76,7 @@ function makeBlindsTool(blindsSymbolDefinition) {
 	tool.lastScaleFactor = 1;
 
 	tool.onMouseMove = (event) => {
+		console.log("mouse moving");
 		const delta = 5 * -event.delta.y / paper.view.bounds.height;
 
 		// Clamp the blinds progress to (almost) 0-1.
