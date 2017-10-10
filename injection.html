@@ -1,3 +1,5 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.11.4/paper-core.js"></script>
+<script type="text/javascript">
 const k = {
 	// How long should the script wait until enabling blinds interaction? (in ms)
 	interactionDelay: 1000,
@@ -21,9 +23,8 @@ window.onload = function() {
 	const container = 
 		document.querySelector(".Site-inner");
 
-	console.log("Container: ", container);
-
 	const canvas = document.createElement('canvas');
+	canvas.setAttribute('resize', true);
 	container.appendChild(canvas);
 
 	setup(paper, canvas);
@@ -166,3 +167,12 @@ function wrap(n, width) {
 function positionOfBlindInstance(blindIndex, viewHeight, numberOfBlinds) {
 	return new paper.Point(0, blindIndex * viewHeight / numberOfBlinds);
 }
+
+</script>
+<style> 
+/* Scale canvas with resize attribute to full size */
+canvas[resize] {
+	width: 100%;
+	height: 100%;
+}
+</style>
