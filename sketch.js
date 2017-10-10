@@ -141,11 +141,11 @@ function makeBlindsTool(blindsSymbolDefinition) {
 
 // Instantiates a new SymbolItem from `blindDefinition`, for a blind at the specified index.
 function instantiateBlind(blindDefinition, blindIndex, numberOfBlinds) {
-		const instancePosition = 
-			positionOfBlindInstance(blindIndex, paper.view.bounds.height, numberOfBlinds)
+	const instancePosition = 
+		positionOfBlindInstance(blindIndex, paper.view.bounds.height, numberOfBlinds)
 
-		const instance = blindDefinition.place(instancePosition);
-		instance.pivot = new paper.Point(0, 0);
+	const instance = blindDefinition.place(instancePosition);
+	instance.pivot = new paper.Point(0, 0);
 }
 
 
